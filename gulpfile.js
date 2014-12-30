@@ -66,7 +66,7 @@ gulp.task('watch', function () {
   });
 
   // Webpack
-  watch(['app/scripts/**/*.js', 'app/templates/**/*.jade'], function () {
+  watch(['app/scripts/**/*.js', 'app/views/**/*.jade'], function () {
     gulp.start('webpack', function(){
       livereload.changed();
     });

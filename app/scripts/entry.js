@@ -9,7 +9,7 @@ var appDependencies = [
 
 var app = angular.module('frontendboilerplate', appDependencies);
 
-$('body').prepend(require('../templates/index.jade')());
+$('body').prepend(require('../views/index.jade')());
 
 app.config(['$routeProvider', function ($routeProvider) {
   var routes = [
@@ -20,7 +20,7 @@ app.config(['$routeProvider', function ($routeProvider) {
   ];
 
   routes.forEach(function(route){
-    $routeProvider.when(route.path, {template: require('../templates/' + route.template + '.jade')()});
+    $routeProvider.when(route.path, {template: require('../views/' + route.template + '.jade')()});
   });
 
   $routeProvider.otherwise({redirectTo: '/404'});
