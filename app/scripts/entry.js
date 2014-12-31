@@ -1,5 +1,7 @@
 require('./app.controller');
 
+$('body').prepend(require('../views/index.jade')());
+
 var appDependencies = [
   'ng',
   'ngRoute',
@@ -7,11 +9,13 @@ var appDependencies = [
   'app'
 ];
 
-var app = angular.module('frontendboilerplate', appDependencies);
+angular
+  .module('frontendboilerplate', appDependencies)
+  .config(appConfig);
 
-$('body').prepend(require('../views/index.jade')());
+appConfig.$nject = ['$routeProvider'];
 
-app.config(['$routeProvider', function ($routeProvider) {
+function appConfig ($routeProvider) {
   var routes = [
     {
       path: '/',
@@ -24,9 +28,4 @@ app.config(['$routeProvider', function ($routeProvider) {
   });
 
   $routeProvider.otherwise({redirectTo: '/404'});
-}]);
-
-app.run(['$rootScope', '$routeParams', function ($rootScope, $routeParams)
-{
-  $rootScope.routeParams = $routeParams;
-}]);
+}
