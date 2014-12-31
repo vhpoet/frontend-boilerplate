@@ -1,3 +1,5 @@
+'use strict';
+
 /**
  * @ngdoc function
  * @name app.controller:AppController

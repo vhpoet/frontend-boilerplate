@@ -1,3 +1,5 @@
+'use strict';
+
 require('./app.controller');
 
 $('body').prepend(require('../views/index.jade')());
