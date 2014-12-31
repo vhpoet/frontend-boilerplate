@@ -1,7 +1,9 @@
 /**
- * APP
- *
- * The app controller manages the global scope.
+ * @ngdoc function
+ * @name app.controller:AppController
+ * @description
+ * # AppController
+ * Controller of the app
  */
 
 angular
