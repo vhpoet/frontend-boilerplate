@@ -16,6 +16,7 @@
     "browser-sync": "^1.8.3",
     "gulp": "~3.8.10",
     "gulp-concat": "^2.4.3",
+    "gulp-imagemin": "^2.1.0",
     "gulp-livereload": "~2.1.1",
     "gulp-protractor": "0.0.12",
     "gulp-ruby-sass": "~1.0.0-alpha",

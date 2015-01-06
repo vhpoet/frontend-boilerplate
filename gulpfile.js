@@ -9,7 +9,8 @@ var gulp = require('gulp'),
     watch = require('gulp-watch'),
     browserSync = require('browser-sync'),
     sourcemaps = require('gulp-sourcemaps'),
-    protractor = require('gulp-protractor');
+    protractor = require('gulp-protractor'),
+    imagemin = require('gulp-imagemin');
 
 var dependencies = [
   'bower_components/angular/angular.js',
@@ -64,6 +65,17 @@ gulp.task('sass', function () {
     .pipe(browserSync.reload({stream:true}));
 });
 
+// Images
+gulp.task('images', function () {
+  return gulp.src('app/images/**/*')
+    .pipe(imagemin({
+      optimizationLevel: 3,
+      progressive: true,
+      interlaced: true
+    }))
+    .pipe(gulp.dest('build/dist/images/'));
+});
+
 // Static server
 gulp.task('serve', function() {
   browserSync({
@@ -89,7 +101,7 @@ gulp.task('protractor', ['webdriver-update'], function () {
 // Default Task
 gulp.task('default', ['serve'], function(callback) {
   runSequence(
-    ['deps','webpack','html','sass'],
+    ['deps','webpack','html','sass','images'],
     'depsUglify',
     callback);
 
@@ -107,4 +119,7 @@ gulp.task('default', ['serve'], function(callback) {
 
   // Styles
   gulp.watch('app/styles/**/*.scss', ['sass']);
+
+  // Images
+  gulp.watch('app/images/**/*', ['images']);
 });
