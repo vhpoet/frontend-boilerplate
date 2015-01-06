@@ -10,7 +10,8 @@ var gulp = require('gulp'),
     browserSync = require('browser-sync'),
     sourcemaps = require('gulp-sourcemaps'),
     protractor = require('gulp-protractor'),
-    imagemin = require('gulp-imagemin');
+    imagemin = require('gulp-imagemin'),
+    del = require('del');
 
 var dependencies = [
   'bower_components/angular/angular.js',
@@ -98,11 +99,18 @@ gulp.task('protractor', ['webdriver-update'], function () {
     });
 });
 
+// Clean
+gulp.task('clean', function (done) {
+  del(['build/'], done);
+});
+
 // Default Task
-gulp.task('default', ['serve'], function(callback) {
+gulp.task('default', function(callback) {
   runSequence(
+    'clean',
     ['deps','webpack','html','sass','images'],
     'depsUglify',
+    'serve',
     callback);
 
   // Deps
