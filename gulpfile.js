@@ -5,10 +5,10 @@ var gulp = require('gulp'),
     webpack = require('gulp-webpack'),
     concat = require('gulp-concat'),
     uglify = require('gulp-uglify'),
-    sass = require('gulp-sass'),
+    sass = require('gulp-ruby-sass'),
     watch = require('gulp-watch'),
-    livereload = require('gulp-livereload'),
     browserSync = require('browser-sync'),
+    sourcemaps = require('gulp-sourcemaps'),
     protractor = require('gulp-protractor');
 
 var dependencies = [
@@ -55,9 +55,13 @@ gulp.task('html', function() {
 
 // Sass
 gulp.task('sass', function () {
-  gulp.src('app/styles/main.scss')
-    .pipe(sass())
-    .pipe(gulp.dest('build/dist/styles'));
+  return sass('app/styles/main.scss', { sourcemap: true })
+    .on('error', function (err) {
+      console.error('Error!', err.message);
+    })
+    .pipe(sourcemaps.write())
+    .pipe(gulp.dest('build/dist/styles'))
+    .pipe(browserSync.reload({stream:true}));
 });
 
 // Static server
@@ -82,45 +86,25 @@ gulp.task('protractor', ['webdriver-update'], function () {
     });
 });
 
-// Watch
-gulp.task('watch', function () {
-  livereload.listen();
-
-  // Deps
-  watch(dependencies, function () {
-    runSequence('deps', 'depsUglify');
-    livereload.changed();
-  });
-
-  // Webpack
-  watch(['app/scripts/**/*.js', 'app/views/**/*.jade'], function () {
-    gulp.start('webpack', function(){
-      livereload.changed();
-    });
-  });
-
-  // Styles
-  watch('app/styles/**/*.scss', function () {
-    gulp.start('sass', function(){
-      // TODO don't ask..
-      setTimeout(function(){
-        livereload.changed();
-      }, 1000)
-    });
-  });
-
-  // Htmls
-  watch('app/*.html', function () {
-    gulp.start('html', function(){
-      livereload.changed();
-    });
-  });
-});
-
 // Default Task
-gulp.task('default', function(callback) {
+gulp.task('default', ['serve'], function(callback) {
   runSequence(
     ['deps','webpack','html','sass'],
     'depsUglify',
     callback);
+
+  // Deps
+  gulp.watch(dependencies, function () {
+    runSequence('deps', 'depsUglify', browserSync.reload);
+  });
+
+  // Webpack
+  gulp.watch(['app/scripts/**/*.js', 'app/views/**/*.jade'],
+    ['webpack', browserSync.reload]);
+
+  // Htmls
+  gulp.watch('app/*.html', ['html', browserSync.reload]);
+
+  // Styles
+  gulp.watch('app/styles/**/*.scss', ['sass']);
 });
