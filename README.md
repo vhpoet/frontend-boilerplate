@@ -2,7 +2,7 @@ No fancy generators, just clone this repo and build your app on top of it.
 
 ### Package
 
-- Uses AngularJS, Bower, Gulp, Jade, Sass. 
+- Uses AngularJS, Bower, Gulp, Jade, Sass (with sourcemaps), browserSync. 
 - Respects [angularjs-styleguide](https://github.com/johnpapa/angularjs-styleguide).
 
 ### Setup
