@@ -7,7 +7,9 @@ var gulp = require('gulp'),
     uglify = require('gulp-uglify'),
     sass = require('gulp-sass'),
     watch = require('gulp-watch'),
-    livereload = require('gulp-livereload');
+    livereload = require('gulp-livereload'),
+    browserSync = require('browser-sync'),
+    protractor = require('gulp-protractor');
 
 var dependencies = [
   'bower_components/angular/angular.js',
@@ -56,6 +58,28 @@ gulp.task('sass', function () {
   gulp.src('app/styles/main.scss')
     .pipe(sass())
     .pipe(gulp.dest('build/dist/styles'));
+});
+
+// Static server
+gulp.task('serve', function() {
+  browserSync({
+    server: {
+      baseDir: "build/dist"
+    }
+  });
+});
+
+// e2e tests
+gulp.task('webdriver-update', protractor.webdriver_update);
+gulp.task('protractor', ['webdriver-update'], function () {
+  gulp.src(['test/e2e/**/*.js'])
+    .pipe(protractor.protractor({
+      configFile: "test/protractor.config.js",
+      args: ['--baseUrl', 'http://localhost:3000']
+    }))
+    .on('error', function (e) {
+      throw e
+    });
 });
 
 // Watch
