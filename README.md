@@ -12,7 +12,11 @@ No fancy generators, just clone this repo and build your app on top of it.
 - `$ bower install`
 - `$ gulp`
 
-Access your awesome app in `build/dist`.
+Access your awesome app in `build/dev`.
+
+### Deployment
+
+Run `$ gulp dist` for the production ready code in `build/dist`.
 
 ### Contributing
 
