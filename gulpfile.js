@@ -1,96 +1,77 @@
 'use strict';
 
-var gulp = require('gulp'),
-    runSequence = require('run-sequence'),
-    webpack = require('gulp-webpack'),
-    concat = require('gulp-concat'),
-    uglify = require('gulp-uglify'),
-    sass = require('gulp-ruby-sass'),
-    watch = require('gulp-watch'),
-    browserSync = require('browser-sync'),
-    sourcemaps = require('gulp-sourcemaps'),
-    protractor = require('gulp-protractor'),
-    imagemin = require('gulp-imagemin'),
-    del = require('del');
+var gulp = require('gulp');
 
-var dependencies = [
-  'bower_components/angular/angular.js',
-  'bower_components/angular-route/angular-route.js',
-  'bower_components/jquery/dist/jquery.js',
-  'bower_components/bootstrap-sass/dist/js/bootstrap.js'
-];
-
-// Dependencies
-gulp.task('deps', function() {
-  return gulp.src(dependencies)
-    .pipe(concat('deps.js'))
-    .pipe(gulp.dest('build/dist/scripts/'))
-});
-
-gulp.task('depsUglify', function() {
-  return gulp.src('build/dist/scripts/deps.js')
-    .pipe(uglify())
-    .pipe(gulp.dest('build/dist/scripts/'))
+var $ = require('gulp-load-plugins')({
+  pattern: ['gulp-*', 'del', 'browser-sync']
 });
 
 // Webpack
 gulp.task('webpack', function() {
   return gulp.src('app/scripts/entry.js')
-    .pipe(webpack({
+    .pipe($.webpack({
       module: {
         loaders: [
           { test: /\.jade$/, loader: "jade-loader" }
         ]
       },
       output: {
-        filename: "frontendboilerplate.js"
+        filename: "app.js"
       }
     }))
-    .pipe(gulp.dest('build/dist/scripts/'));
+    .pipe(gulp.dest('build/dev/scripts/'));
 });
 
 // Html
 gulp.task('html', function() {
   return gulp.src('app/index.html')
-    .pipe(gulp.dest('build/dist/'))
+    .pipe(gulp.dest('build/dev'))
 });
 
 // Sass
 gulp.task('sass', function () {
-  return sass('app/styles/main.scss', { sourcemap: true })
+  return $.rubySass('app/styles/app.scss', { sourcemap: true })
     .on('error', function (err) {
       console.error('Error!', err.message);
     })
-    .pipe(sourcemaps.write())
-    .pipe(gulp.dest('build/dist/styles'))
-    .pipe(browserSync.reload({stream:true}));
+    .pipe($.sourcemaps.write())
+    .pipe(gulp.dest('build/dev/styles'))
+    .pipe($.browserSync.reload({stream:true}));
 });
 
 // Images
 gulp.task('images', function () {
   return gulp.src('app/images/**/*')
-    .pipe(imagemin({
+    .pipe($.imagemin({
       optimizationLevel: 3,
       progressive: true,
       interlaced: true
     }))
-    .pipe(gulp.dest('build/dist/images/'));
+    .pipe(gulp.dest('build/dev/images/'));
 });
 
 // Static server
-gulp.task('serve', function() {
-  browserSync({
+gulp.task('serve:dev', function() {
+  $.browserSync({
     server: {
-      baseDir: "build/dist"
+      baseDir: [".","build/dev"]
+    }
+  });
+});
+
+gulp.task('serve:dist', function() {
+  $.browserSync({
+    server: {
+      baseDir: ["build/dist"]
     }
   });
 });
 
 // e2e tests
-gulp.task('webdriver-update', protractor.webdriver_update);
+gulp.task('webdriver-update', $.protractor.webdriver_update);
 gulp.task('protractor', ['webdriver-update'], function () {
   gulp.src(['test/e2e/**/*.js'])
-    .pipe(protractor.protractor({
+    .pipe($.protractor.protractor({
       configFile: "test/protractor.config.js",
       args: ['--baseUrl', 'http://localhost:3000']
     }))
@@ -99,35 +80,70 @@ gulp.task('protractor', ['webdriver-update'], function () {
     });
 });
 
-// Clean
-gulp.task('clean', function (done) {
-  del(['build/'], done);
+// Bower dependencies
+gulp.task('wiredep', function () {
+  var wiredep = require('wiredep').stream;
+
+  return gulp.src('app/index.html')
+    .pipe(wiredep({
+      directory: 'bower_components'
+    }))
+    .pipe(gulp.dest('app'));
 });
 
-// Default Task
-gulp.task('default', function(callback) {
-  runSequence(
-    'clean',
-    ['deps','webpack','html','sass','images'],
-    'depsUglify',
-    'serve',
-    callback);
+// Clean
+gulp.task('clean', function () {
+  $.del(['build/dev/*', 'build/dist/*']);
+});
 
-  // Deps
-  gulp.watch(dependencies, function () {
-    runSequence('deps', 'depsUglify', browserSync.reload);
-  });
-
+// Default Task (Dev environment)
+gulp.task('default', ['dev', 'serve:dev'], function(callback) {
   // Webpack
   gulp.watch(['app/scripts/**/*.js', 'app/views/**/*.jade'],
-    ['webpack', browserSync.reload]);
+    ['webpack', $.browserSync.reload]);
 
   // Htmls
-  gulp.watch('app/*.html', ['html', browserSync.reload]);
+  gulp.watch('app/*.html', ['html', $.browserSync.reload]);
 
   // Styles
   gulp.watch('app/styles/**/*.scss', ['sass']);
 
   // Images
   gulp.watch('app/images/**/*', ['images']);
+});
+
+// Development
+gulp.task('dev', ['clean','html','webpack','images','sass']);
+
+// Distribution
+gulp.task('dist', ['wiredep', 'dev'], function () {
+  var assets = $.useref.assets();
+
+  return gulp.src(['app/*.html'])
+    // Concatenates asset files from the build blocks inside the HTML
+    .pipe(assets)
+    // Appends hash to extracted files app.css → app-098f6bcd.css
+    .pipe($.rev())
+    // Adds AngularJS dependency injection annotations
+    .pipe($.gulpif('*.js', $.ngAnnotate()))
+    // Uglifies js files
+    .pipe($.gulpif('*.js', $.uglify()))
+    // Minifies css files
+    .pipe($.gulpif('*.css', $.csso()))
+    // Brings back the previously filtered HTML files
+    .pipe(assets.restore())
+    // Parses build blocks in html to replace references to non-optimized scripts or stylesheets
+    .pipe($.useref())
+    // Rewrites occurences of filenames which have been renamed by rev
+    .pipe($.revReplace())
+    // Minifies html
+    .pipe($.gulpif('*.html', $.minifyHtml({
+      empty: true,
+      spare: true,
+      quotes: true
+    })))
+    // Creates the actual files
+    .pipe(gulp.dest('build/dist/'))
+    // Print the file sizes
+    .pipe($.size({ title: 'build/dist/', showFiles: true }));
 });

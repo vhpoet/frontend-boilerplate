@@ -1,33 +1,53 @@
 <html ng-app="frontendboilerplate" ng-controller="AppController">
 <head>
-    <meta charset="utf-8">
+  <meta charset="utf-8">
 
-    <title>frontendboilerplate</title>
-    <meta name="description" content="">
+  <title>frontendboilerplate</title>
+  <meta name="description" content="">
 
-    <meta property="og:description" content=""/>
+  <meta property="og:description" content=""/>
 
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-title" content="frontendboilerplate">
-    <meta name="mobile-web-app-capable" content="yes" />
-    <meta name="mobile-web-app-title" content="frontendboilerplate" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-title" content="frontendboilerplate">
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="mobile-web-app-title" content="frontendboilerplate" />
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <!-- CSS -->
-    <link href="styles/main.css" rel="stylesheet">
-    <!-- ENDS CSS -->
+  <!-- build:css styles/vendor.css -->
+  <!-- bower:css -->
+  <link rel="stylesheet" href="../bower_components/bootstrap-sass/dist/css/bootstrap.css" />
+  <!-- endbower -->
+  <!-- endbuild -->
 
-    <!-- FAVICON  -->
-    <link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon">
-    <link rel="icon" href="/images/favicon.ico" type="image/x-icon">
-    <!-- END FAVICON -->
+  <!-- build:css(build/dev) styles/app.css -->
+  <!-- inject:css -->
+  <link rel="stylesheet" href="styles/app.css">
+  <!-- endinject -->
+  <!-- endbuild -->
+
+  <!-- FAVICON  -->
+  <link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon">
+  <link rel="icon" href="/images/favicon.ico" type="image/x-icon">
+  <!-- END FAVICON -->
 </head>
 
 <body>
 
-<script src="scripts/deps.js"></script>
-<script src="scripts/frontendboilerplate.js"></script>
+  <!-- build:js scripts/vendor.js -->
+  <!-- bower:js -->
+  <script src="../bower_components/jquery/dist/jquery.js"></script>
+  <script src="../bower_components/angular/angular.js"></script>
+  <script src="../bower_components/angular-route/angular-route.js"></script>
+  <script src="../bower_components/bootstrap-sass/dist/js/bootstrap.js"></script>
+  <!-- endbower -->
+  <!-- endbuild -->
+
+  <!-- build:js(build/dev) scripts/app.js -->
+  <!-- inject:js -->
+  <script src="scripts/app.js"></script>
+  <!-- endinject -->
+  <!-- endbuild -->
 
 </body>
 </html>
