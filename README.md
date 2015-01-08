@@ -9,6 +9,8 @@ No fancy generators, just clone this repo and build your app on top of it.
 
 - Find and replace `frontendboilerplate` to `yourappname` in `./`
 - `$ npm install`
+- `$ npm install -g bower`
+- `$ gem install sass`
 - `$ bower install`
 - `$ gulp`
 
