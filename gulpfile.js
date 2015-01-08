@@ -60,7 +60,9 @@ gulp.task('serve:dev', function() {
     server: {
       baseDir: [".","build/dev"],
       middleware: [
-        modRewrite(['!\\.\\w+$ /index.html [L]'])
+        modRewrite([
+          '!\\.html|\\.js|\\.css|\\.png$ /index.html [L]'
+        ])
       ]
     }
   });
@@ -71,7 +73,9 @@ gulp.task('serve:dist', function() {
     server: {
       baseDir: ["build/dist"],
       middleware: [
-        modRewrite(['!\\.\\w+$ /index.html [L]'])
+        modRewrite([
+          '!\\.html|\\.js|\\.css|\\.png$ /index.html [L]'
+        ])
       ]
     }
   });
