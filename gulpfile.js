@@ -105,6 +105,10 @@ gulp.task('wiredep', function () {
     .pipe(gulp.dest('app'));
 });
 
+gulp.task('bower', function() {
+  return $.bower();
+});
+
 // Clean
 gulp.task('clean', function () {
   $.del(['build/dev/*', 'build/dist/*']);
@@ -126,7 +130,7 @@ gulp.task('default', ['dev', 'serve:dev'], function(callback) {
 });
 
 // Development
-gulp.task('dev', ['clean','html','webpack','images','sass']);
+gulp.task('dev', ['clean','bower','html','webpack','images','sass']);
 
 // Distribution
 gulp.task('dist', ['wiredep', 'dev'], function () {
@@ -138,11 +142,11 @@ gulp.task('dist', ['wiredep', 'dev'], function () {
     // Appends hash to extracted files app.css → app-098f6bcd.css
     .pipe($.rev())
     // Adds AngularJS dependency injection annotations
-    .pipe($.gulpif('*.js', $.ngAnnotate()))
+    .pipe($.if('*.js', $.ngAnnotate()))
     // Uglifies js files
-    .pipe($.gulpif('*.js', $.uglify()))
+    .pipe($.if('*.js', $.uglify()))
     // Minifies css files
-    .pipe($.gulpif('*.css', $.csso()))
+    .pipe($.if('*.css', $.csso()))
     // Brings back the previously filtered HTML files
     .pipe(assets.restore())
     // Parses build blocks in html to replace references to non-optimized scripts or stylesheets
@@ -150,7 +154,7 @@ gulp.task('dist', ['wiredep', 'dev'], function () {
     // Rewrites occurences of filenames which have been renamed by rev
     .pipe($.revReplace())
     // Minifies html
-    .pipe($.gulpif('*.html', $.minifyHtml({
+    .pipe($.if('*.html', $.minifyHtml({
       empty: true,
       spare: true,
       quotes: true
