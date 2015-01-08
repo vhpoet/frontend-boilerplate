@@ -16,7 +16,7 @@ angular
   .module('frontendboilerplate', appDependencies)
   .config(appConfig);
 
-appConfig.$nject = ['$stateProvider', '$urlRouterProvider', '$locationProvider'];
+appConfig.$inject = ['$stateProvider', '$urlRouterProvider', '$locationProvider'];
 
 function appConfig ($stateProvider, $urlRouterProvider, $locationProvider) {
   var routes = [
