@@ -11,7 +11,6 @@ No fancy generators, just clone this repo and build your app on top of it.
 - `$ npm install`
 - `$ npm install -g bower gulp`
 - `$ gem install sass`
-- `$ bower install`
 - `$ gulp`
 
 Access your awesome app in `build/dev`.
