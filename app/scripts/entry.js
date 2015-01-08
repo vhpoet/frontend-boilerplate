@@ -6,7 +6,7 @@ $('body').prepend(require('../views/index.jade')());
 
 var appDependencies = [
   'ng',
-  'ngRoute',
+  'ui.router',
   // Controllers
   'app'
 ];
@@ -15,19 +15,31 @@ angular
   .module('frontendboilerplate', appDependencies)
   .config(appConfig);
 
-appConfig.$nject = ['$routeProvider'];
+appConfig.$nject = ['$stateProvider', '$urlRouterProvider', '$locationProvider'];
 
-function appConfig ($routeProvider) {
+function appConfig ($stateProvider, $urlRouterProvider, $locationProvider) {
   var routes = [
     {
-      path: '/',
-      template: 'index'
+      name: 'main',
+      path: ''
+    },
+    {
+      name: 'about',
+      path: 'about'
     }
   ];
 
   routes.forEach(function(route){
-    $routeProvider.when(route.path, {template: require('../views/' + route.template + '.jade')()});
+    var template = require('../views/' + route.name + '.jade')();
+
+    $stateProvider.state(route.name, {
+      url: '/' + route.path,
+      views: {
+        guest: { template: template }
+      }
+    });
   });
 
-  $routeProvider.otherwise({redirectTo: '/404'});
+  $urlRouterProvider.otherwise("/404");
+  $locationProvider.html5Mode(true);
 }

@@ -1,6 +1,7 @@
 'use strict';
 
 var gulp = require('gulp');
+var modRewrite = require('connect-modrewrite');
 
 var $ = require('gulp-load-plugins')({
   pattern: ['gulp-*', 'del', 'browser-sync']
@@ -19,13 +20,15 @@ gulp.task('webpack', function() {
         filename: "app.js"
       }
     }))
-    .pipe(gulp.dest('build/dev/scripts/'));
+    .pipe(gulp.dest('build/dev/scripts/'))
+    .pipe($.browserSync.reload({stream:true}));
 });
 
 // Html
 gulp.task('html', function() {
   return gulp.src('app/index.html')
     .pipe(gulp.dest('build/dev'))
+    .pipe($.browserSync.reload({stream:true}))
 });
 
 // Sass
@@ -47,14 +50,18 @@ gulp.task('images', function () {
       progressive: true,
       interlaced: true
     }))
-    .pipe(gulp.dest('build/dev/images/'));
+    .pipe(gulp.dest('build/dev/images/'))
+    .pipe($.browserSync.reload({stream:true}));
 });
 
 // Static server
 gulp.task('serve:dev', function() {
   $.browserSync({
     server: {
-      baseDir: [".","build/dev"]
+      baseDir: [".","build/dev"],
+      middleware: [
+        modRewrite(['!\\.\\w+$ /index.html [L]'])
+      ]
     }
   });
 });
@@ -62,7 +69,10 @@ gulp.task('serve:dev', function() {
 gulp.task('serve:dist', function() {
   $.browserSync({
     server: {
-      baseDir: ["build/dist"]
+      baseDir: ["build/dist"],
+      middleware: [
+        modRewrite(['!\\.\\w+$ /index.html [L]'])
+      ]
     }
   });
 });
@@ -99,11 +109,10 @@ gulp.task('clean', function () {
 // Default Task (Dev environment)
 gulp.task('default', ['dev', 'serve:dev'], function(callback) {
   // Webpack
-  gulp.watch(['app/scripts/**/*.js', 'app/views/**/*.jade'],
-    ['webpack', $.browserSync.reload]);
+  gulp.watch(['app/scripts/**/*.js', 'app/views/**/*.jade'], ['webpack']);
 
   // Htmls
-  gulp.watch('app/*.html', ['html', $.browserSync.reload]);
+  gulp.watch('app/*.html', ['html']);
 
   // Styles
   gulp.watch('app/styles/**/*.scss', ['sass']);
