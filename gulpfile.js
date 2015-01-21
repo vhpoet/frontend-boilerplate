@@ -13,7 +13,8 @@ gulp.task('webpack', function() {
     .pipe($.webpack({
       module: {
         loaders: [
-          { test: /\.jade$/, loader: "jade-loader" }
+          { test: /\.jade$/, loader: "jade-loader" },
+          { test: /\.json$/, loader: "json-loader" }
         ]
       },
       output: {
