@@ -1,20 +1,18 @@
 'use strict';
 
+var appDependencies = [
+  'ng',
+  'ui.router'
+];
+
+angular
+  .module('app', appDependencies)
+  .config(appConfig);
+
 require('./app.controller');
 require('./about.controller');
 
 $('body').prepend(require('../views/index.jade')());
-
-var appDependencies = [
-  'ng',
-  'ui.router',
-  // Controllers
-  'app'
-];
-
-angular
-  .module('frontendboilerplate', appDependencies)
-  .config(appConfig);
 
 appConfig.$inject = ['$stateProvider', '$urlRouterProvider', '$locationProvider'];
 
