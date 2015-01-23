@@ -20,6 +20,11 @@ Access your awesome app in `build/dev`.
 
 Run `$ gulp dist` for the production ready code in `build/dist`.
 
+### TODO
+
+- Add unit tests
+- Add user signup/signin service
+
 ### Contributing
 
 I'm open for contributions via pull-requests, and please open an issue for anything you don't like.
