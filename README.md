@@ -24,6 +24,7 @@ Run `$ gulp dist` for the production ready code in `build/dist`.
 
 - Add unit tests
 - Add user signup/signin service
+- Use Angular controllerAs 
 
 ### Contributing
 
