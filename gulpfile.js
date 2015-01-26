@@ -44,14 +44,20 @@ gulp.task('sass', function () {
 });
 
 // Images
-gulp.task('images', function () {
+gulp.task('images:dev', function () {
+  return gulp.src('app/images/**/*')
+    .pipe(gulp.dest('build/dev/images/'))
+    .pipe($.browserSync.reload({stream:true}));
+});
+
+gulp.task('images:dist', function () {
   return gulp.src('app/images/**/*')
     .pipe($.imagemin({
       optimizationLevel: 3,
       progressive: true,
       interlaced: true
     }))
-    .pipe(gulp.dest('build/dev/images/'))
+    .pipe(gulp.dest('build/dist/images/'))
     .pipe($.browserSync.reload({stream:true}));
 });
 
@@ -131,10 +137,10 @@ gulp.task('default', ['dev', 'serve:dev'], function(callback) {
 });
 
 // Development
-gulp.task('dev', ['clean','bower','html','webpack','images','sass']);
+gulp.task('dev', ['clean','bower','html','webpack','images:dev','sass']);
 
 // Distribution
-gulp.task('dist', ['wiredep', 'dev'], function () {
+gulp.task('dist', ['wiredep', 'dev', 'images:dist'], function () {
   var assets = $.useref.assets();
 
   return gulp.src(['app/*.html'])
