@@ -61,6 +61,12 @@ gulp.task('images:dist', function () {
     .pipe($.browserSync.reload({stream:true}));
 });
 
+// .htaccess
+gulp.task('htaccess', function () {
+  return gulp.src('.htaccess')
+    .pipe(gulp.dest('build/dist/'));
+});
+
 // Static server
 gulp.task('serve:dev', function() {
   $.browserSync({
@@ -140,7 +146,7 @@ gulp.task('default', ['dev', 'serve:dev'], function(callback) {
 gulp.task('dev', ['clean','bower','html','webpack','images:dev','sass']);
 
 // Distribution
-gulp.task('dist', ['wiredep', 'dev', 'images:dist'], function () {
+gulp.task('dist', ['wiredep', 'dev', 'images:dist', 'htaccess'], function () {
   var assets = $.useref.assets();
 
   return gulp.src(['app/*.html'])
