@@ -139,7 +139,7 @@ gulp.task('default', ['dev', 'serve:dev'], function(callback) {
   gulp.watch('app/styles/**/*.scss', ['sass']);
 
   // Images
-  gulp.watch('app/images/**/*', ['images']);
+  gulp.watch('app/images/**/*', ['images:dev']);
 });
 
 // Development
