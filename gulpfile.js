@@ -87,7 +87,7 @@ gulp.task('serve:dist', function() {
       baseDir: ["build/dist"],
       middleware: [
         modRewrite([
-          '!\\.html|\\.js|\\.css|\\.png|\\.jpg|\\.gif$ /index.html [L]'
+          '!\\.html|\\.js|\\.css|\\.png|\\.jpg|\\.gif|\\.svg|\\.txt$ /index.html [L]'
         ])
       ]
     }
