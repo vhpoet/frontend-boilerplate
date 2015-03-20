@@ -124,7 +124,7 @@ gulp.task('bower', function() {
 
 // Clean
 gulp.task('clean', function () {
-  $.del(['build/dev/*', 'build/dist/*']);
+  $.del.sync(['build/dev/*', 'build/dist/*']);
 });
 
 // Default Task (Dev environment)
