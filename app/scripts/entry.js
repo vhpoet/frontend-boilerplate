@@ -12,8 +12,6 @@ angular
 require('./app.controller');
 require('./about.controller');
 
-$('body').prepend(require('../views/index.jade')());
-
 appConfig.$inject = ['$stateProvider', '$urlRouterProvider', '$locationProvider'];
 
 function appConfig ($stateProvider, $urlRouterProvider, $locationProvider) {
@@ -29,12 +27,10 @@ function appConfig ($stateProvider, $urlRouterProvider, $locationProvider) {
   ];
 
   routes.forEach(function(route){
-    var template = require('../views/' + route.name + '.jade')();
-
     $stateProvider.state(route.name, {
       url: '/' + route.path,
       views: {
-        guest: { template: template }
+        guest: { templateUrl: 'views/' + route.name + '.html' }
       }
     });
   });

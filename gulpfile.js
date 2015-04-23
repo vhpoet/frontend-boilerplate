@@ -1,7 +1,8 @@
 'use strict';
 
-var gulp = require('gulp');
-var modRewrite = require('connect-modrewrite');
+var gulp = require('gulp'),
+  jade = require('jade'),
+  modRewrite = require('connect-modrewrite');
 
 var $ = require('gulp-load-plugins')({
   pattern: ['gulp-*', 'del', 'browser-sync']
@@ -13,7 +14,6 @@ gulp.task('webpack', function() {
     .pipe($.webpack({
       module: {
         loaders: [
-          { test: /\.jade$/, loader: "jade-loader" },
           { test: /\.json$/, loader: "json-loader" }
         ]
       },
@@ -26,10 +26,34 @@ gulp.task('webpack', function() {
 });
 
 // Html
-gulp.task('html', function() {
-  return gulp.src('app/index.html')
+gulp.task('html:dev', function() {
+  return gulp.src('build/dev/views/index.html')
     .pipe(gulp.dest('build/dev'))
-    .pipe($.browserSync.reload({stream:true}))
+    .pipe($.browserSync.reload({stream:true}));
+});
+
+gulp.task('html:dist', function() {
+  return gulp.src('build/dist/views/index.html')
+    .pipe(gulp.dest('build/dist'))
+});
+
+// Views
+gulp.task('views:dev', function(){
+  return gulp.src('app/views/**/*.jade')
+    .pipe($.jade({
+      jade: jade,
+      pretty: true
+    }))
+    .pipe(gulp.dest('build/dev/views'));
+});
+
+gulp.task('views:dist', function(){
+  return gulp.src('app/views/**/*.jade')
+    .pipe($.jade({
+      jade: jade,
+      pretty: true
+    }))
+    .pipe(gulp.dest('build/dist/views'));
 });
 
 // Sass
@@ -118,24 +142,31 @@ gulp.task('clean', function () {
 
 // Default Task (Dev environment)
 gulp.task('default', ['dev', 'serve:dev'], function(callback) {
-  // Webpack
-  gulp.watch(['app/scripts/**/*.js', 'app/views/**/*.jade'], ['webpack']);
+  gulp.start('html:dev');
+
+  // Scripts
+  gulp.watch(['app/scripts/**/*.js'], ['webpack']);
+
+  // Views
+  $.watch('app/views/**/*.jade')
+    .pipe($.jadeFindAffected())
+    .pipe($.jade({jade: jade, pretty: true}))
+    .pipe(gulp.dest('build/dev/views'));
 
   // Htmls
-  gulp.watch('app/*.html', ['html']);
+  gulp.watch('build/dev/views/**/*.html', ['html:dev']);
 
   // Styles
   gulp.watch('app/styles/**/*.scss', ['sass']);
 });
 
 // Development
-gulp.task('dev', ['clean','bower','html','webpack','sass']);
+gulp.task('dev', ['clean', 'bower', 'webpack', 'sass', 'views:dev', 'html:dev']);
 
-// Distribution
-gulp.task('dist', ['wiredep', 'dev', 'images', 'htaccess'], function () {
+gulp.task('deps', ['html:dist'], function () {
   var assets = $.useref.assets();
 
-  return gulp.src(['app/*.html'])
+  return gulp.src(['build/dist/index.html'])
     // Concatenates asset files from the build blocks inside the HTML
     .pipe(assets)
     // Appends hash to extracted files app.css → app-098f6bcd.css
@@ -162,4 +193,9 @@ gulp.task('dist', ['wiredep', 'dev', 'images', 'htaccess'], function () {
     .pipe(gulp.dest('build/dist/'))
     // Print the file sizes
     .pipe($.size({ title: 'build/dist/', showFiles: true }));
+});
+
+// Distribution
+gulp.task('dist', ['wiredep', 'dev', 'images', 'htaccess', 'views:dist'], function () {
+  gulp.start('deps');
 });

@@ -1,13 +1,61 @@
-header
+html(ng-app='app', ng-controller='AppController')
+  head
+    meta(charset='utf-8')
+    title frontendboilerplate
+    meta(name='description', content='')
+    meta(property='og:description', content='')
 
-.container
-  .page-header
-    h1 Frontend Boilerplate
-    .menu
-      a(ui-sref="main") Home
-      a(ui-sref="about") About
-  div(ui-view="guest")
+    meta(name='apple-mobile-web-app-capable', content='yes')
+    meta(name='apple-mobile-web-app-title', content='frontendboilerplate')
+    meta(name='mobile-web-app-capable', content='yes')
+    meta(name='mobile-web-app-title', content='frontendboilerplate')
 
-footer
-  .container
-    p.text-muted Made with love.
+    meta(name='viewport', content='width=device-width, initial-scale=1.0')
+
+    <!-- build:css /styles/vendor.css -->
+    <!-- bower:css -->
+    link(rel='stylesheet', href='../../bower_components/bootstrap/dist/css/bootstrap.css')
+    <!-- endbower -->
+    <!-- endbuild -->
+
+    <!-- build:css(build/dev) /styles/app.css -->
+    <!-- inject:css -->
+    link(rel='stylesheet', href='/styles/app.css')
+    <!-- endinject -->
+    <!-- endbuild -->
+
+    // FAVICON
+    link(rel='shortcut icon', href='/images/favicon.ico', type='image/x-icon')
+    link(rel='icon', href='/images/favicon.ico', type='image/x-icon')
+
+    base(href='/')
+  body
+    header
+
+    .container
+      .page-header
+        h1 Frontend Boilerplate
+        .menu
+          a(ui-sref="main") Home
+          a(ui-sref="about") About
+
+      div(ui-view="guest")
+
+    footer
+      .container
+        p.text-muted Made with love.
+
+    <!-- build:js scripts/vendor.js -->
+    <!-- bower:js -->
+    script(src='../../bower_components/jquery/dist/jquery.js')
+    script(src='../../bower_components/angular/angular.js')
+    script(src='../../bower_components/angular-ui-router/release/angular-ui-router.js')
+    script(src='../../bower_components/bootstrap/dist/js/bootstrap.js')
+    <!-- endbower -->
+    <!-- endbuild -->
+
+    <!-- build:js(build/dev) /scripts/app.js -->
+    <!-- inject:js -->
+    script(src='/scripts/app.js')
+    <!-- endinject -->
+    <!-- endbuild -->
