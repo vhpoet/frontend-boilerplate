@@ -44,13 +44,7 @@ gulp.task('sass', function () {
 });
 
 // Images
-gulp.task('images:dev', function () {
-  return gulp.src('app/images/**/*')
-    .pipe(gulp.dest('build/dev/images/'))
-    .pipe($.browserSync.reload({stream:true}));
-});
-
-gulp.task('images:dist', function () {
+gulp.task('images', function () {
   return gulp.src('app/images/**/*')
     .pipe(gulp.dest('build/dist/images/'))
     .pipe($.browserSync.reload({stream:true}));
@@ -66,10 +60,10 @@ gulp.task('htaccess', function () {
 gulp.task('serve:dev', function() {
   $.browserSync({
     server: {
-      baseDir: [".","build/dev"],
+      baseDir: [".","build/dev","app"],
       middleware: [
         modRewrite([
-          '!\\.html|\\.js|\\.css|\\.png|\\.jpg|\\.gif$ /index.html [L]'
+          '!\\.html|\\.js|\\.css|\\.png|\\.jpg|\\.gif|\\.svg|\\.txt$ /index.html [L]'
         ])
       ]
     }
@@ -132,16 +126,13 @@ gulp.task('default', ['dev', 'serve:dev'], function(callback) {
 
   // Styles
   gulp.watch('app/styles/**/*.scss', ['sass']);
-
-  // Images
-  gulp.watch('app/images/**/*', ['images:dev']);
 });
 
 // Development
-gulp.task('dev', ['clean','bower','html','webpack','images:dev','sass']);
+gulp.task('dev', ['clean','bower','html','webpack','sass']);
 
 // Distribution
-gulp.task('dist', ['wiredep', 'dev', 'images:dist', 'htaccess'], function () {
+gulp.task('dist', ['wiredep', 'dev', 'images', 'htaccess'], function () {
   var assets = $.useref.assets();
 
   return gulp.src(['app/*.html'])
