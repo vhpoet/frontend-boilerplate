@@ -52,11 +52,6 @@ gulp.task('images:dev', function () {
 
 gulp.task('images:dist', function () {
   return gulp.src('app/images/**/*')
-    .pipe($.imagemin({
-      optimizationLevel: 3,
-      progressive: true,
-      interlaced: true
-    }))
     .pipe(gulp.dest('build/dist/images/'))
     .pipe($.browserSync.reload({stream:true}));
 });

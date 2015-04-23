@@ -20,7 +20,6 @@
     "gulp-bower": "0.0.7",
     "gulp-csso": "^0.2.9",
     "gulp-if": "^1.2.5",
-    "gulp-imagemin": "^2.1.0",
     "gulp-livereload": "~2.1.1",
     "gulp-load-plugins": "^0.8.0",
     "gulp-minify-html": "^0.1.8",
