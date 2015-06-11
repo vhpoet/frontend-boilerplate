@@ -145,7 +145,7 @@ gulp.task('default', ['dev', 'serve:dev'], function(callback) {
   gulp.start('html:dev');
 
   // Scripts
-  gulp.watch(['app/scripts/**/*.js'], ['webpack']);
+  gulp.watch(['config.json', 'app/scripts/**/*.js'], ['webpack']);
 
   // Views
   $.watch('app/views/**/*.jade')

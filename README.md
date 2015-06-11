@@ -12,6 +12,7 @@ No fancy generators, just clone this repo and build your app on top of it.
 - `$ npm install`
 - `$ npm install -g bower gulp`
 - `$ gem install sass`
+- `$ cp config-example.json config.json`
 - `$ gulp`
 
 Access your awesome app in `build/dev`.
@@ -22,7 +23,6 @@ Run `$ gulp dist` for the production ready code in `build/dist`.
 
 ### TODO
 
-- Add a config file
 - Add unit tests
 - Add user signup/signin service
 - Use Angular controllerAs 

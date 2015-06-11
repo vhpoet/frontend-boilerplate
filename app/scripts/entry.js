@@ -7,7 +7,8 @@ var appDependencies = [
 
 angular
   .module('app', appDependencies)
-  .config(appConfig);
+  .config(appConfig)
+  .constant('config', require('../../config.json'));
 
 require('./app.controller');
 require('./about.controller');
