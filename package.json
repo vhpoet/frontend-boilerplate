@@ -11,6 +11,7 @@
     "type": "git",
     "url": "git://github.com/vhpoet/frontend-boilerplate.git"
   },
+  "main": "build/dist/index.html",
   "readmeFilename": "README",
   "devDependencies": {
     "browser-sync": "^1.8.3",

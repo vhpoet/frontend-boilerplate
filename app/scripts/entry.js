@@ -13,9 +13,9 @@ angular
 require('./app.controller');
 require('./about.controller');
 
-appConfig.$inject = ['$stateProvider', '$urlRouterProvider', '$locationProvider'];
+appConfig.$inject = ['$stateProvider', '$urlRouterProvider'];
 
-function appConfig ($stateProvider, $urlRouterProvider, $locationProvider) {
+function appConfig ($stateProvider, $urlRouterProvider) {
   var routes = [
     {
       name: 'main',
@@ -29,13 +29,12 @@ function appConfig ($stateProvider, $urlRouterProvider, $locationProvider) {
 
   routes.forEach(function(route){
     $stateProvider.state(route.name, {
-      url: '/' + route.path,
+      url: "/" + route.path,
       views: {
         guest: { templateUrl: 'views/' + route.name + '.html' }
       }
     });
   });
 
-  $urlRouterProvider.otherwise("/404");
-  $locationProvider.html5Mode(true);
+  $urlRouterProvider.otherwise("/");
 }

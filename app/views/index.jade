@@ -12,23 +12,21 @@ html(ng-app='app', ng-controller='AppController')
 
     meta(name='viewport', content='width=device-width, initial-scale=1.0')
 
-    <!-- build:css /styles/vendor.css -->
+    <!-- build:css styles/vendor.css -->
     <!-- bower:css -->
     link(rel='stylesheet', href='../../bower_components/bootstrap/dist/css/bootstrap.css')
     <!-- endbower -->
     <!-- endbuild -->
 
-    <!-- build:css(build/dev) /styles/app.css -->
+    <!-- build:css(build/dev) styles/app.css -->
     <!-- inject:css -->
-    link(rel='stylesheet', href='/styles/app.css')
+    link(rel='stylesheet', href='styles/app.css')
     <!-- endinject -->
     <!-- endbuild -->
 
     // FAVICON
-    link(rel='shortcut icon', href='/images/favicon.ico', type='image/x-icon')
-    link(rel='icon', href='/images/favicon.ico', type='image/x-icon')
-
-    base(href='/')
+    link(rel='shortcut icon', href='images/favicon.ico', type='image/x-icon')
+    link(rel='icon', href='images/favicon.ico', type='image/x-icon')
   body
     header
 
@@ -54,7 +52,7 @@ html(ng-app='app', ng-controller='AppController')
     <!-- endbower -->
     <!-- endbuild -->
 
-    <!-- build:js(build/dev) /scripts/app.js -->
+    <!-- build:js(build/dev) scripts/app.js -->
     <!-- inject:js -->
     script(src='/scripts/app.js')
     <!-- endinject -->
