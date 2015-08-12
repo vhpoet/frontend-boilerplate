@@ -142,8 +142,9 @@ gulp.task('clean', function () {
 });
 
 // Default Task (Dev environment)
-gulp.task('default', ['dev', 'serve:dev'], function(callback) {
+gulp.task('default', ['dev'], function(callback) {
   gulp.start('html:dev');
+  gulp.start('serve:dev');
 
   // Scripts
   gulp.watch(['config.json', 'app/scripts/**/*.js'], ['webpack']);
