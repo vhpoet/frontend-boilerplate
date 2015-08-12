@@ -3,7 +3,8 @@
 var gulp = require('gulp'),
   jade = require('jade'),
   modRewrite = require('connect-modrewrite'),
-  webpack = require('webpack-stream');
+  webpack = require('webpack-stream'),
+  NwBuilder = require('nw-builder');
 
 var $ = require('gulp-load-plugins')({
   pattern: ['gulp-*', 'del', 'browser-sync']
@@ -204,4 +205,23 @@ gulp.task('deps', ['html:dist'], function () {
 // Distribution
 gulp.task('dist', ['wiredep', 'dev', 'images', 'htaccess', 'views:dist'], function () {
   gulp.start('deps');
+});
+
+// Packages
+gulp.task('app', function() {
+  var nw = new NwBuilder({
+    files: ['package.json','build/dist/**/**'], // use the glob format
+    platforms: ['win', 'osx', 'linux'],
+    appName: 'frontendboilerplate',
+    buildDir: 'build/packages',
+    buildType: 'timestamped',
+    macZip: true
+    // TODO: macIcns
+    // TODO: winIco
+  });
+
+  return nw.build()
+    .catch(function (error) {
+      console.error(error);
+    });
 });
