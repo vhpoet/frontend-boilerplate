@@ -2,7 +2,8 @@
 
 var gulp = require('gulp'),
   jade = require('jade'),
-  modRewrite = require('connect-modrewrite');
+  modRewrite = require('connect-modrewrite'),
+  webpack = require('webpack-stream');
 
 var $ = require('gulp-load-plugins')({
   pattern: ['gulp-*', 'del', 'browser-sync']
@@ -11,7 +12,7 @@ var $ = require('gulp-load-plugins')({
 // Webpack
 gulp.task('webpack', function() {
   return gulp.src('app/scripts/entry.js')
-    .pipe($.webpack({
+    .pipe(webpack({
       module: {
         loaders: [
           { test: /\.json$/, loader: "json-loader" }
