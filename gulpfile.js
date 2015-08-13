@@ -15,7 +15,7 @@ var DIST_FOLDER = 'build/dist/';
 var DEV_FOLDER = 'build/dev/';
 var PACKAGES_FOLDER = 'build/packages/';
 
-var meta = require('package.json');
+var meta = require('./package.json');
 
 // Webpack
 gulp.task('webpack', function() {
