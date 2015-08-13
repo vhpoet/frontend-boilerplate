@@ -30,20 +30,8 @@ gulp.task('webpack', function() {
     .pipe($.browserSync.reload({stream:true}));
 });
 
-// Html
-gulp.task('html:dev', function() {
-  return gulp.src(DEV_FOLDER + 'views/index.html')
-    .pipe(gulp.dest(DEV_FOLDER))
-    .pipe($.browserSync.reload({stream:true}));
-});
-
-gulp.task('html:dist', function() {
-  return gulp.src(DIST_FOLDER + 'views/index.html')
-    .pipe(gulp.dest(DIST_FOLDER))
-});
-
 // Views
-gulp.task('views:dev', function(){
+gulp.task('jade:dev', function(){
   return gulp.src('app/views/**/*.jade')
     .pipe($.jade({
       jade: jade,
@@ -52,13 +40,25 @@ gulp.task('views:dev', function(){
     .pipe(gulp.dest(DEV_FOLDER + 'views'));
 });
 
-gulp.task('views:dist', function(){
+gulp.task('jade:dist', function(){
   return gulp.src('app/views/**/*.jade')
     .pipe($.jade({
       jade: jade,
       pretty: true
     }))
     .pipe(gulp.dest(DIST_FOLDER + 'views'));
+});
+
+// Html
+gulp.task('html:dev', ['jade:dev'], function() {
+  return gulp.src(DEV_FOLDER + 'views/index.html')
+    .pipe(gulp.dest(DEV_FOLDER))
+    .pipe($.browserSync.reload({stream:true}));
+});
+
+gulp.task('html:dist', ['jade:dist'], function() {
+  return gulp.src(DIST_FOLDER + 'views/index.html')
+    .pipe(gulp.dest(DIST_FOLDER))
 });
 
 // Sass
@@ -86,7 +86,7 @@ gulp.task('htaccess', function () {
 });
 
 // Static server
-gulp.task('serve:dev', function() {
+gulp.task('serve:dev', ['dev'], function() {
   $.browserSync({
     server: {
       baseDir: [".",DEV_FOLDER,"app"],
@@ -145,11 +145,11 @@ gulp.task('clean', function () {
   $.del.sync([DEV_FOLDER + '*', DIST_FOLDER + '*']);
 });
 
-// Default Task (Dev environment)
-gulp.task('default', ['dev'], function(callback) {
-  gulp.start('html:dev');
-  gulp.start('serve:dev');
+// Development
+gulp.task('dev', ['clean', 'bower', 'webpack', 'sass', 'html:dev']);
 
+// Default Task (Dev environment)
+gulp.task('default', ['serve:dev'], function() {
   // Scripts
   gulp.watch(['config.json', 'app/scripts/**/*.js'], ['webpack']);
 
@@ -165,9 +165,6 @@ gulp.task('default', ['dev'], function(callback) {
   // Styles
   gulp.watch('app/styles/**/*.scss', ['sass']);
 });
-
-// Development
-gulp.task('dev', ['clean', 'bower', 'webpack', 'sass', 'views:dev', 'html:dev']);
 
 gulp.task('deps', ['html:dist'], function () {
   var assets = $.useref.assets();
@@ -202,6 +199,5 @@ gulp.task('deps', ['html:dist'], function () {
 });
 
 // Distribution
-gulp.task('dist', ['wiredep', 'dev', 'images', 'htaccess', 'views:dist'], function () {
-  gulp.start('deps');
-});
+gulp.task('prepare', ['wiredep', 'dev', 'images', 'htaccess']);
+gulp.task('dist', ['prepare', 'deps']);
