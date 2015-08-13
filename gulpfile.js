@@ -15,6 +15,8 @@ var DIST_FOLDER = 'build/dist/';
 var DEV_FOLDER = 'build/dev/';
 var PACKAGES_FOLDER = 'build/packages/';
 
+var meta = require('package.json');
+
 // Webpack
 gulp.task('webpack', function() {
   return gulp.src('app/scripts/entry.js')
@@ -213,7 +215,7 @@ gulp.task('packages', function() {
   var nw = new NwBuilder({
     files: ['package.json','build/dist/**/**'], // use the glob format
     platforms: ['win', 'osx', 'linux'],
-    appName: 'frontendboilerplate',
+    appName: meta.name,
     buildDir: 'build/packages',
     macZip: true
     // TODO: timestamped versions
@@ -224,29 +226,29 @@ gulp.task('packages', function() {
   return nw.build()
     .then(function(){
       // Zip the packages
-      gulp.src(PACKAGES_FOLDER + 'frontendboilerplate/linux32/**/*')
+      gulp.src(PACKAGES_FOLDER + meta.name + '/linux32/**/*')
         .pipe($.zip('linux32.zip'))
-        .pipe(gulp.dest(PACKAGES_FOLDER + 'frontendboilerplate'));
+        .pipe(gulp.dest(PACKAGES_FOLDER + meta.name));
 
-      gulp.src(PACKAGES_FOLDER + 'frontendboilerplate/linux64/**/*')
+      gulp.src(PACKAGES_FOLDER + meta.name + '/linux64/**/*')
         .pipe($.zip('linux64.zip'))
-        .pipe(gulp.dest(PACKAGES_FOLDER + 'frontendboilerplate'));
+        .pipe(gulp.dest(PACKAGES_FOLDER + meta.name));
 
-      gulp.src(PACKAGES_FOLDER + 'frontendboilerplate/osx32/**/*')
+      gulp.src(PACKAGES_FOLDER + meta.name + '/osx32/**/*')
         .pipe($.zip('osx32.zip'))
-        .pipe(gulp.dest(PACKAGES_FOLDER + 'frontendboilerplate'));
+        .pipe(gulp.dest(PACKAGES_FOLDER + meta.name));
 
-      gulp.src(PACKAGES_FOLDER + 'frontendboilerplate/osx64/**/*')
+      gulp.src(PACKAGES_FOLDER + meta.name + '/osx64/**/*')
         .pipe($.zip('osx64.zip'))
-        .pipe(gulp.dest(PACKAGES_FOLDER + 'frontendboilerplate'));
+        .pipe(gulp.dest(PACKAGES_FOLDER + meta.name));
 
-      gulp.src(PACKAGES_FOLDER + 'frontendboilerplate/win32/**/*')
+      gulp.src(PACKAGES_FOLDER + meta.name + '/win32/**/*')
         .pipe($.zip('win32.zip'))
-        .pipe(gulp.dest(PACKAGES_FOLDER + 'frontendboilerplate'));
+        .pipe(gulp.dest(PACKAGES_FOLDER + meta.name));
 
-      gulp.src(PACKAGES_FOLDER + 'frontendboilerplate/win64/**/*')
+      gulp.src(PACKAGES_FOLDER + meta.name + '/win64/**/*')
         .pipe($.zip('win64.zip'))
-        .pipe(gulp.dest(PACKAGES_FOLDER + 'frontendboilerplate'));
+        .pipe(gulp.dest(PACKAGES_FOLDER + meta.name));
     })
     .catch(function (error) {
       console.error(error);
