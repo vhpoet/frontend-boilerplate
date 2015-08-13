@@ -103,6 +103,7 @@ gulp.task('htaccess', function () {
 // Static server
 gulp.task('serve:dev', ['dev'], function() {
   $.browserSync({
+    open: false,
     server: {
       baseDir: [".",DEV_FOLDER,"app"],
       middleware: [
@@ -116,6 +117,7 @@ gulp.task('serve:dev', ['dev'], function() {
 
 gulp.task('serve:dist', function() {
   $.browserSync({
+    open: false,
     server: {
       baseDir: [DIST_FOLDER],
       middleware: [

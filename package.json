@@ -11,7 +11,8 @@
     "type": "git",
     "url": "git://github.com/vhpoet/frontend-boilerplate.git"
   },
-  "main": "build/dev/index.html",
+  "node-remote": "http://localhost:3000",
+  "main": "http://localhost:3000",
   "window": {
     "frame": true,
     "toolbar": true
