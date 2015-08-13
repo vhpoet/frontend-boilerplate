@@ -9,6 +9,10 @@ var $ = require('gulp-load-plugins')({
   pattern: ['gulp-*', 'del', 'browser-sync']
 });
 
+// Constants
+var DIST_FOLDER = 'build/dist/';
+var DEV_FOLDER = 'build/dev/';
+
 // Webpack
 gulp.task('webpack', function() {
   return gulp.src('app/scripts/entry.js')
@@ -22,20 +26,20 @@ gulp.task('webpack', function() {
         filename: "app.js"
       }
     }))
-    .pipe(gulp.dest('build/dev/scripts/'))
+    .pipe(gulp.dest(DEV_FOLDER + 'scripts/'))
     .pipe($.browserSync.reload({stream:true}));
 });
 
 // Html
 gulp.task('html:dev', function() {
-  return gulp.src('build/dev/views/index.html')
-    .pipe(gulp.dest('build/dev'))
+  return gulp.src(DEV_FOLDER + 'views/index.html')
+    .pipe(gulp.dest(DEV_FOLDER))
     .pipe($.browserSync.reload({stream:true}));
 });
 
 gulp.task('html:dist', function() {
-  return gulp.src('build/dist/views/index.html')
-    .pipe(gulp.dest('build/dist'))
+  return gulp.src(DIST_FOLDER + 'views/index.html')
+    .pipe(gulp.dest(DIST_FOLDER))
 });
 
 // Views
@@ -45,7 +49,7 @@ gulp.task('views:dev', function(){
       jade: jade,
       pretty: true
     }))
-    .pipe(gulp.dest('build/dev/views'));
+    .pipe(gulp.dest(DEV_FOLDER + 'views'));
 });
 
 gulp.task('views:dist', function(){
@@ -54,7 +58,7 @@ gulp.task('views:dist', function(){
       jade: jade,
       pretty: true
     }))
-    .pipe(gulp.dest('build/dist/views'));
+    .pipe(gulp.dest(DIST_FOLDER + 'views'));
 });
 
 // Sass
@@ -64,28 +68,28 @@ gulp.task('sass', function () {
       console.error('Error!', err.message);
     })
     .pipe($.sourcemaps.write())
-    .pipe(gulp.dest('build/dev/styles'))
+    .pipe(gulp.dest(DEV_FOLDER + 'styles'))
     .pipe($.browserSync.reload({stream:true}));
 });
 
 // Images
 gulp.task('images', function () {
   return gulp.src('app/images/**/*')
-    .pipe(gulp.dest('build/dist/images/'))
+    .pipe(gulp.dest(DIST_FOLDER + 'images/'))
     .pipe($.browserSync.reload({stream:true}));
 });
 
 // .htaccess
 gulp.task('htaccess', function () {
   return gulp.src('.htaccess')
-    .pipe(gulp.dest('build/dist/'));
+    .pipe(gulp.dest(DIST_FOLDER));
 });
 
 // Static server
 gulp.task('serve:dev', function() {
   $.browserSync({
     server: {
-      baseDir: [".","build/dev","app"],
+      baseDir: [".",DEV_FOLDER,"app"],
       middleware: [
         modRewrite([
           '!\\.html|\\.js|\\.css|\\.png|\\.jpg|\\.gif|\\.svg|\\.txt$ /index.html [L]'
@@ -98,7 +102,7 @@ gulp.task('serve:dev', function() {
 gulp.task('serve:dist', function() {
   $.browserSync({
     server: {
-      baseDir: ["build/dist"],
+      baseDir: [DIST_FOLDER],
       middleware: [
         modRewrite([
           '!\\.html|\\.js|\\.css|\\.png|\\.jpg|\\.gif|\\.svg|\\.txt$ /index.html [L]'
@@ -138,7 +142,7 @@ gulp.task('bower', function() {
 
 // Clean
 gulp.task('clean', function () {
-  $.del.sync(['build/dev/*', 'build/dist/*']);
+  $.del.sync([DEV_FOLDER + '*', DIST_FOLDER + '*']);
 });
 
 // Default Task (Dev environment)
@@ -153,10 +157,10 @@ gulp.task('default', ['dev'], function(callback) {
   $.watch('app/views/**/*.jade')
     .pipe($.jadeFindAffected())
     .pipe($.jade({jade: jade, pretty: true}))
-    .pipe(gulp.dest('build/dev/views'));
+    .pipe(gulp.dest(DEV_FOLDER + 'views'));
 
   // Htmls
-  gulp.watch('build/dev/views/**/*.html', ['html:dev']);
+  gulp.watch(DEV_FOLDER + 'views/**/*.html', ['html:dev']);
 
   // Styles
   gulp.watch('app/styles/**/*.scss', ['sass']);
@@ -168,7 +172,7 @@ gulp.task('dev', ['clean', 'bower', 'webpack', 'sass', 'views:dev', 'html:dev'])
 gulp.task('deps', ['html:dist'], function () {
   var assets = $.useref.assets();
 
-  return gulp.src(['build/dist/index.html'])
+  return gulp.src([DIST_FOLDER + 'index.html'])
     // Concatenates asset files from the build blocks inside the HTML
     .pipe(assets)
     // Appends hash to extracted files app.css → app-098f6bcd.css
@@ -192,9 +196,9 @@ gulp.task('deps', ['html:dist'], function () {
       quotes: true
     })))
     // Creates the actual files
-    .pipe(gulp.dest('build/dist/'))
+    .pipe(gulp.dest(DIST_FOLDER))
     // Print the file sizes
-    .pipe($.size({ title: 'build/dist/', showFiles: true }));
+    .pipe($.size({ title: DIST_FOLDER, showFiles: true }));
 });
 
 // Distribution
