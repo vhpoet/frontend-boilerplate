@@ -4,7 +4,8 @@ var gulp = require('gulp'),
   jade = require('jade'),
   modRewrite = require('connect-modrewrite'),
   webpack = require('webpack-stream'),
-  NwBuilder = require('nw-builder');
+  NwBuilder = require('nw-builder'),
+  merge = require('merge-stream');
 
 var $ = require('gulp-load-plugins')({
   pattern: ['gulp-*', 'del', 'browser-sync']
@@ -219,12 +220,14 @@ gulp.task('deps', ['html:dist'], function () {
 gulp.task('prepare', ['wiredep', 'dev', 'images:dist', 'htaccess', 'packagejson']);
 gulp.task('dist', ['prepare', 'deps']);
 
-// Packages
-gulp.task('packages', function() {
+// Build packages
+gulp.task('build', ['dist'], function() {
   var nw = new NwBuilder({
     files: ['build/dist/**/**'], // use the glob format
     platforms: ['win', 'osx', 'linux'],
-    appName: meta.name,
+    // TODO: Use these instead of the nested app/package.json values
+    //appName: meta.name,
+    //appVersion: meta.version,
     buildDir: 'build/packages',
     macZip: true
     // TODO: timestamped versions
@@ -233,34 +236,41 @@ gulp.task('packages', function() {
   });
 
   return nw.build()
-    .then(function(){
-      // Zip the packages
-      gulp.src(PACKAGES_FOLDER + meta.name + '/linux32/**/*')
-        .pipe($.zip('linux32.zip'))
-        .pipe(gulp.dest(PACKAGES_FOLDER + meta.name));
-
-      gulp.src(PACKAGES_FOLDER + meta.name + '/linux64/**/*')
-        .pipe($.zip('linux64.zip'))
-        .pipe(gulp.dest(PACKAGES_FOLDER + meta.name));
-
-      gulp.src(PACKAGES_FOLDER + meta.name + '/osx32/**/*')
-        .pipe($.zip('osx32.zip'))
-        .pipe(gulp.dest(PACKAGES_FOLDER + meta.name));
-
-      gulp.src(PACKAGES_FOLDER + meta.name + '/osx64/**/*')
-        .pipe($.zip('osx64.zip'))
-        .pipe(gulp.dest(PACKAGES_FOLDER + meta.name));
-
-      gulp.src(PACKAGES_FOLDER + meta.name + '/win32/**/*')
-        .pipe($.zip('win32.zip'))
-        .pipe(gulp.dest(PACKAGES_FOLDER + meta.name));
-
-      gulp.src(PACKAGES_FOLDER + meta.name + '/win64/**/*')
-        .pipe($.zip('win64.zip'))
-        .pipe(gulp.dest(PACKAGES_FOLDER + meta.name));
-    })
     .catch(function (error) {
       console.error(error);
     });
 });
+
+// Zip packages
+gulp.task('zip', ['build'], function() {
+  // Zip the packages
+  var linux32 = gulp.src(PACKAGES_FOLDER + meta.name + '/linux32/**/*')
+    .pipe($.zip('linux32.zip'))
+    .pipe(gulp.dest(PACKAGES_FOLDER + meta.name));
+
+  var linux64 = gulp.src(PACKAGES_FOLDER + meta.name + '/linux64/**/*')
+    .pipe($.zip('linux64.zip'))
+    .pipe(gulp.dest(PACKAGES_FOLDER + meta.name));
+
+  var osx32 = gulp.src(PACKAGES_FOLDER + meta.name + '/osx32/**/*')
+    .pipe($.zip('osx32.zip'))
+    .pipe(gulp.dest(PACKAGES_FOLDER + meta.name));
+
+  var osx64 = gulp.src(PACKAGES_FOLDER + meta.name + '/osx64/**/*')
+    .pipe($.zip('osx64.zip'))
+    .pipe(gulp.dest(PACKAGES_FOLDER + meta.name));
+
+  var win32 = gulp.src(PACKAGES_FOLDER + meta.name + '/win32/**/*')
+    .pipe($.zip('win32.zip'))
+    .pipe(gulp.dest(PACKAGES_FOLDER + meta.name));
+
+  var win64 = gulp.src(PACKAGES_FOLDER + meta.name + '/win64/**/*')
+    .pipe($.zip('win64.zip'))
+    .pipe(gulp.dest(PACKAGES_FOLDER + meta.name));
+
+  return merge(linux32, linux64, osx32, osx64, win32, win64);
+});
+
+// Final product
+gulp.task('packages', ['build', 'zip']);
 
