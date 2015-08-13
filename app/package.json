@@ -1,0 +1,7 @@
+{
+  "main": "build/dist/index.html",
+  "window": {
+    "frame": true,
+    "toolbar": false
+  }
+}

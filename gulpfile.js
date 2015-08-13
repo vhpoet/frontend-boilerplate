@@ -77,10 +77,21 @@ gulp.task('sass', function () {
 });
 
 // Images
-gulp.task('images', function () {
+gulp.task('images:dist', function () {
   return gulp.src('app/images/**/*')
     .pipe(gulp.dest(DIST_FOLDER + 'images/'))
+});
+
+gulp.task('images:dev', function () {
+  return gulp.src('app/images/**/*')
+    .pipe(gulp.dest(DEV_FOLDER + 'images/'))
     .pipe($.browserSync.reload({stream:true}));
+});
+
+// package.json
+gulp.task('packagejson', function () {
+  return gulp.src('app/package.json')
+    .pipe(gulp.dest(DIST_FOLDER))
 });
 
 // .htaccess
@@ -150,7 +161,7 @@ gulp.task('clean', function () {
 });
 
 // Development
-gulp.task('dev', ['clean', 'bower', 'webpack', 'sass', 'html:dev']);
+gulp.task('dev', ['clean', 'bower', 'webpack', 'sass', 'html:dev', 'images:dev']);
 
 // Default Task (Dev environment)
 gulp.task('default', ['serve:dev'], function() {
@@ -203,13 +214,13 @@ gulp.task('deps', ['html:dist'], function () {
 });
 
 // Distribution
-gulp.task('prepare', ['wiredep', 'dev', 'images', 'htaccess']);
+gulp.task('prepare', ['wiredep', 'dev', 'images:dist', 'htaccess', 'packagejson']);
 gulp.task('dist', ['prepare', 'deps']);
 
 // Packages
 gulp.task('packages', function() {
   var nw = new NwBuilder({
-    files: ['package.json','build/dist/**/**'], // use the glob format
+    files: ['build/dist/**/**'], // use the glob format
     platforms: ['win', 'osx', 'linux'],
     appName: meta.name,
     buildDir: 'build/packages',

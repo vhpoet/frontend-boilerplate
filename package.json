@@ -11,10 +11,10 @@
     "type": "git",
     "url": "git://github.com/vhpoet/frontend-boilerplate.git"
   },
-  "main": "build/dist/index.html",
+  "main": "build/dev/index.html",
   "window": {
     "frame": true,
-    "toolbar": false
+    "toolbar": true
   },
   "readmeFilename": "README",
   "devDependencies": {
