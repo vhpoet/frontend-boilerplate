@@ -208,19 +208,45 @@ gulp.task('dist', ['wiredep', 'dev', 'images', 'htaccess', 'views:dist'], functi
 });
 
 // Packages
-gulp.task('app', function() {
+gulp.task('packages', function() {
   var nw = new NwBuilder({
     files: ['package.json','build/dist/**/**'], // use the glob format
     platforms: ['win', 'osx', 'linux'],
     appName: 'frontendboilerplate',
     buildDir: 'build/packages',
-    buildType: 'timestamped',
     macZip: true
+    // TODO: timestamped versions
     // TODO: macIcns
     // TODO: winIco
   });
 
   return nw.build()
+    .then(function(){
+      // Zip the packages
+      gulp.src('build/packages/frontendboilerplate/linux32/**/*')
+        .pipe($.zip('linux32.zip'))
+        .pipe(gulp.dest('build/packages/frontendboilerplate'));
+
+      gulp.src('build/packages/frontendboilerplate/linux64/**/*')
+        .pipe($.zip('linux64.zip'))
+        .pipe(gulp.dest('build/packages/frontendboilerplate'));
+
+      gulp.src('build/packages/frontendboilerplate/osx32/**/*')
+        .pipe($.zip('osx32.zip'))
+        .pipe(gulp.dest('build/packages/frontendboilerplate'));
+
+      gulp.src('build/packages/frontendboilerplate/osx64/**/*')
+        .pipe($.zip('osx64.zip'))
+        .pipe(gulp.dest('build/packages/frontendboilerplate'));
+
+      gulp.src('build/packages/frontendboilerplate/win32/**/*')
+        .pipe($.zip('win32.zip'))
+        .pipe(gulp.dest('build/packages/frontendboilerplate'));
+
+      gulp.src('build/packages/frontendboilerplate/win64/**/*')
+        .pipe($.zip('win64.zip'))
+        .pipe(gulp.dest('build/packages/frontendboilerplate'));
+    })
     .catch(function (error) {
       console.error(error);
     });
