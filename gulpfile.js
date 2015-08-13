@@ -13,6 +13,7 @@ var $ = require('gulp-load-plugins')({
 // Constants
 var DIST_FOLDER = 'build/dist/';
 var DEV_FOLDER = 'build/dev/';
+var PACKAGES_FOLDER = 'build/packages/';
 
 // Webpack
 gulp.task('webpack', function() {
@@ -223,29 +224,29 @@ gulp.task('packages', function() {
   return nw.build()
     .then(function(){
       // Zip the packages
-      gulp.src('build/packages/frontendboilerplate/linux32/**/*')
+      gulp.src(PACKAGES_FOLDER + 'frontendboilerplate/linux32/**/*')
         .pipe($.zip('linux32.zip'))
-        .pipe(gulp.dest('build/packages/frontendboilerplate'));
+        .pipe(gulp.dest(PACKAGES_FOLDER + 'frontendboilerplate'));
 
-      gulp.src('build/packages/frontendboilerplate/linux64/**/*')
+      gulp.src(PACKAGES_FOLDER + 'frontendboilerplate/linux64/**/*')
         .pipe($.zip('linux64.zip'))
-        .pipe(gulp.dest('build/packages/frontendboilerplate'));
+        .pipe(gulp.dest(PACKAGES_FOLDER + 'frontendboilerplate'));
 
-      gulp.src('build/packages/frontendboilerplate/osx32/**/*')
+      gulp.src(PACKAGES_FOLDER + 'frontendboilerplate/osx32/**/*')
         .pipe($.zip('osx32.zip'))
-        .pipe(gulp.dest('build/packages/frontendboilerplate'));
+        .pipe(gulp.dest(PACKAGES_FOLDER + 'frontendboilerplate'));
 
-      gulp.src('build/packages/frontendboilerplate/osx64/**/*')
+      gulp.src(PACKAGES_FOLDER + 'frontendboilerplate/osx64/**/*')
         .pipe($.zip('osx64.zip'))
-        .pipe(gulp.dest('build/packages/frontendboilerplate'));
+        .pipe(gulp.dest(PACKAGES_FOLDER + 'frontendboilerplate'));
 
-      gulp.src('build/packages/frontendboilerplate/win32/**/*')
+      gulp.src(PACKAGES_FOLDER + 'frontendboilerplate/win32/**/*')
         .pipe($.zip('win32.zip'))
-        .pipe(gulp.dest('build/packages/frontendboilerplate'));
+        .pipe(gulp.dest(PACKAGES_FOLDER + 'frontendboilerplate'));
 
-      gulp.src('build/packages/frontendboilerplate/win64/**/*')
+      gulp.src(PACKAGES_FOLDER + 'frontendboilerplate/win64/**/*')
         .pipe($.zip('win64.zip'))
-        .pipe(gulp.dest('build/packages/frontendboilerplate'));
+        .pipe(gulp.dest(PACKAGES_FOLDER + 'frontendboilerplate'));
     })
     .catch(function (error) {
       console.error(error);
