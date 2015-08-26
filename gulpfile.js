@@ -14,6 +14,16 @@ var DIST_FOLDER = 'build/dist/';
 var DEV_FOLDER = 'build/dev/';
 
 // Webpack
+gulp.task('webpack:vendor', function() {
+  return gulp.src('app/scripts/vendor.js')
+    .pipe(webpack({
+      output: {
+        filename: "vendor.js"
+      }
+    }))
+    .pipe(gulp.dest(DEV_FOLDER + 'scripts/'))
+});
+
 gulp.task('webpack', function() {
   return gulp.src('app/scripts/entry.js')
     .pipe(webpack({
@@ -125,28 +135,13 @@ gulp.task('protractor', ['webdriver-update'], function () {
     });
 });
 
-// Bower dependencies
-gulp.task('wiredep', function () {
-  var wiredep = require('wiredep').stream;
-
-  return gulp.src('app/index.html')
-    .pipe(wiredep({
-      directory: 'bower_components'
-    }))
-    .pipe(gulp.dest('app'));
-});
-
-gulp.task('bower', function() {
-  return $.bower();
-});
-
 // Clean
 gulp.task('clean', function () {
   $.del.sync([DEV_FOLDER + '*', DIST_FOLDER + '*']);
 });
 
 // Development
-gulp.task('dev', ['clean', 'bower', 'webpack', 'sass', 'html:dev']);
+gulp.task('dev', ['clean', 'webpack', 'webpack:vendor', 'sass', 'html:dev']);
 
 // Default Task (Dev environment)
 gulp.task('default', ['serve:dev'], function() {
@@ -199,5 +194,5 @@ gulp.task('deps', ['html:dist'], function () {
 });
 
 // Distribution
-gulp.task('prepare', ['wiredep', 'dev', 'images', 'htaccess']);
+gulp.task('prepare', ['dev', 'images', 'htaccess']);
 gulp.task('dist', ['prepare', 'deps']);

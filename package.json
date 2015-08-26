@@ -17,7 +17,6 @@
     "connect-modrewrite": "^0.7.9",
     "del": "^1.1.1",
     "gulp": "~3.8.10",
-    "gulp-bower": "0.0.7",
     "gulp-csso": "^0.2.9",
     "gulp-if": "^1.2.5",
     "gulp-jade": "^1.0.0",
@@ -40,5 +39,11 @@
     "json-loader": "^0.5.1",
     "protractor": "^1.5.0",
     "wiredep": "^2.2.2"
+  },
+  "dependencies": {
+    "angular": "^1.4.4",
+    "angular-ui-router": "^0.2.15",
+    "bootstrap": "^3.3.5",
+    "jquery": "^2.1.4"
   }
 }

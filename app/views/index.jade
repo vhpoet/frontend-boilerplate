@@ -13,9 +13,9 @@ html(ng-app='app', ng-controller='AppController')
     meta(name='viewport', content='width=device-width, initial-scale=1.0')
 
     <!-- build:css /styles/vendor.css -->
-    <!-- bower:css -->
-    link(rel='stylesheet', href='../../bower_components/bootstrap/dist/css/bootstrap.css')
-    <!-- endbower -->
+    <!-- inject:css -->
+    link(rel='stylesheet', href='../../node_modules/bootstrap/dist/css/bootstrap.css')
+    <!-- endinject -->
     <!-- endbuild -->
 
     <!-- build:css(build/dev) /styles/app.css -->
@@ -45,13 +45,10 @@ html(ng-app='app', ng-controller='AppController')
       .container
         p.text-muted Made with love.
 
-    <!-- build:js scripts/vendor.js -->
-    <!-- bower:js -->
-    script(src='../../bower_components/jquery/dist/jquery.js')
-    script(src='../../bower_components/angular/angular.js')
-    script(src='../../bower_components/angular-ui-router/release/angular-ui-router.js')
-    script(src='../../bower_components/bootstrap/dist/js/bootstrap.js')
-    <!-- endbower -->
+    <!-- build:js(build/dev) /scripts/vendor.js -->
+    <!-- inject:js -->
+    script(src='/scripts/vendor.js')
+    <!-- endinject -->
     <!-- endbuild -->
 
     <!-- build:js(build/dev) /scripts/app.js -->
