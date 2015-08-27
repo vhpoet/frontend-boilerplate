@@ -1,4 +1,5 @@
 node_modules
 build
+.tmp
 .sass-cache
 config.json

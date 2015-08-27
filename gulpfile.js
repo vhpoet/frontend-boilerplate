@@ -10,8 +10,8 @@ var $ = require('gulp-load-plugins')({
 });
 
 // Constants
-var DIST_FOLDER = 'build/dist/';
-var DEV_FOLDER = 'build/dev/';
+var BUILD_DIR = 'build/';
+var TMP_DIR = '.tmp/';
 
 // Webpack
 gulp.task('webpack:vendor', function() {
@@ -21,7 +21,7 @@ gulp.task('webpack:vendor', function() {
         filename: "vendor.js"
       }
     }))
-    .pipe(gulp.dest(DEV_FOLDER + 'scripts/'))
+    .pipe(gulp.dest(TMP_DIR + 'scripts/'))
 });
 
 gulp.task('webpack', function() {
@@ -36,7 +36,7 @@ gulp.task('webpack', function() {
         filename: "app.js"
       }
     }))
-    .pipe(gulp.dest(DEV_FOLDER + 'scripts/'))
+    .pipe(gulp.dest(TMP_DIR + 'scripts/'))
     .pipe($.browserSync.reload({stream:true}));
 });
 
@@ -47,7 +47,7 @@ gulp.task('jade:dev', function(){
       jade: jade,
       pretty: true
     }))
-    .pipe(gulp.dest(DEV_FOLDER + 'views'));
+    .pipe(gulp.dest(TMP_DIR + 'views'));
 });
 
 gulp.task('jade:dist', function(){
@@ -56,19 +56,19 @@ gulp.task('jade:dist', function(){
       jade: jade,
       pretty: true
     }))
-    .pipe(gulp.dest(DIST_FOLDER + 'views'));
+    .pipe(gulp.dest(BUILD_DIR + 'views'));
 });
 
 // Html
 gulp.task('html:dev', ['jade:dev'], function() {
-  return gulp.src(DEV_FOLDER + 'views/index.html')
-    .pipe(gulp.dest(DEV_FOLDER))
+  return gulp.src(TMP_DIR + 'views/index.html')
+    .pipe(gulp.dest(TMP_DIR))
     .pipe($.browserSync.reload({stream:true}));
 });
 
 gulp.task('html:dist', ['jade:dist'], function() {
-  return gulp.src(DIST_FOLDER + 'views/index.html')
-    .pipe(gulp.dest(DIST_FOLDER))
+  return gulp.src(BUILD_DIR + 'views/index.html')
+    .pipe(gulp.dest(BUILD_DIR))
 });
 
 // Sass
@@ -78,28 +78,28 @@ gulp.task('sass', function () {
       console.error('Error!', err.message);
     })
     .pipe($.sourcemaps.write())
-    .pipe(gulp.dest(DEV_FOLDER + 'styles'))
+    .pipe(gulp.dest(TMP_DIR + 'styles'))
     .pipe($.browserSync.reload({stream:true}));
 });
 
 // Images
 gulp.task('images', function () {
   return gulp.src('app/images/**/*')
-    .pipe(gulp.dest(DIST_FOLDER + 'images/'))
+    .pipe(gulp.dest(BUILD_DIR + 'images/'))
     .pipe($.browserSync.reload({stream:true}));
 });
 
 // .htaccess
 gulp.task('htaccess', function () {
   return gulp.src('.htaccess')
-    .pipe(gulp.dest(DIST_FOLDER));
+    .pipe(gulp.dest(BUILD_DIR));
 });
 
 // Static server
 gulp.task('serve:dev', ['dev'], function() {
   $.browserSync({
     server: {
-      baseDir: [".",DEV_FOLDER,"app"],
+      baseDir: [".", TMP_DIR, "app"],
       middleware: [
         modRewrite([
           '!\\.html|\\.js|\\.css|\\.png|\\.jpg|\\.gif|\\.svg|\\.txt$ /index.html [L]'
@@ -112,7 +112,7 @@ gulp.task('serve:dev', ['dev'], function() {
 gulp.task('serve:dist', function() {
   $.browserSync({
     server: {
-      baseDir: [DIST_FOLDER],
+      baseDir: [BUILD_DIR],
       middleware: [
         modRewrite([
           '!\\.html|\\.js|\\.css|\\.png|\\.jpg|\\.gif|\\.svg|\\.txt$ /index.html [L]'
@@ -137,7 +137,7 @@ gulp.task('protractor', ['webdriver-update'], function () {
 
 // Clean
 gulp.task('clean', function () {
-  $.del.sync([DEV_FOLDER + '*', DIST_FOLDER + '*']);
+  $.del.sync([TMP_DIR + '*', BUILD_DIR + '*']);
 });
 
 // Development
@@ -152,10 +152,10 @@ gulp.task('default', ['serve:dev'], function() {
   $.watch('app/views/**/*.jade')
     .pipe($.jadeFindAffected())
     .pipe($.jade({jade: jade, pretty: true}))
-    .pipe(gulp.dest(DEV_FOLDER + 'views'));
+    .pipe(gulp.dest(TMP_DIR + 'views'));
 
   // Htmls
-  gulp.watch(DEV_FOLDER + 'views/**/*.html', ['html:dev']);
+  gulp.watch(TMP_DIR + 'views/**/*.html', ['html:dev']);
 
   // Styles
   gulp.watch('app/styles/**/*.scss', ['sass']);
@@ -164,7 +164,7 @@ gulp.task('default', ['serve:dev'], function() {
 gulp.task('deps', ['html:dist'], function () {
   var assets = $.useref.assets();
 
-  return gulp.src([DIST_FOLDER + 'index.html'])
+  return gulp.src([BUILD_DIR + 'index.html'])
     // Concatenates asset files from the build blocks inside the HTML
     .pipe(assets)
     // Appends hash to extracted files app.css → app-098f6bcd.css
@@ -188,9 +188,9 @@ gulp.task('deps', ['html:dist'], function () {
       quotes: true
     })))
     // Creates the actual files
-    .pipe(gulp.dest(DIST_FOLDER))
+    .pipe(gulp.dest(BUILD_DIR))
     // Print the file sizes
-    .pipe($.size({ title: DIST_FOLDER, showFiles: true }));
+    .pipe($.size({ title: BUILD_DIR, showFiles: true }));
 });
 
 // Distribution

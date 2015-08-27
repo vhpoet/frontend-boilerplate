@@ -14,11 +14,11 @@ html(ng-app='app', ng-controller='AppController')
 
     <!-- build:css /styles/vendor.css -->
     <!-- inject:css -->
-    link(rel='stylesheet', href='../../node_modules/bootstrap/dist/css/bootstrap.css')
+    link(rel='stylesheet', href='../node_modules/bootstrap/dist/css/bootstrap.css')
     <!-- endinject -->
     <!-- endbuild -->
 
-    <!-- build:css(build/dev) /styles/app.css -->
+    <!-- build:css(.tmp) /styles/app.css -->
     <!-- inject:css -->
     link(rel='stylesheet', href='/styles/app.css')
     <!-- endinject -->
@@ -45,13 +45,13 @@ html(ng-app='app', ng-controller='AppController')
       .container
         p.text-muted Made with love.
 
-    <!-- build:js(build/dev) /scripts/vendor.js -->
+    <!-- build:js(.tmp) /scripts/vendor.js -->
     <!-- inject:js -->
     script(src='/scripts/vendor.js')
     <!-- endinject -->
     <!-- endbuild -->
 
-    <!-- build:js(build/dev) /scripts/app.js -->
+    <!-- build:js(.tmp) /scripts/app.js -->
     <!-- inject:js -->
     script(src='/scripts/app.js')
     <!-- endinject -->
