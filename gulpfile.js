@@ -182,10 +182,9 @@ gulp.task('deps', ['html:dist'], function () {
     // Rewrites occurences of filenames which have been renamed by rev
     .pipe($.revReplace())
     // Minifies html
-    .pipe($.if('*.html', $.minifyHtml({
-      empty: true,
-      spare: true,
-      quotes: true
+    .pipe($.if('*.html', htmlmin({
+      collapseWhitespace: true,
+      removeComments: true
     })))
     // Creates the actual files
     .pipe(gulp.dest(BUILD_DIR))
