@@ -182,7 +182,7 @@ gulp.task('deps', ['html:dist'], function () {
     // Rewrites occurences of filenames which have been renamed by rev
     .pipe($.revReplace())
     // Minifies html
-    .pipe($.if('*.html', htmlmin({
+    .pipe($.if('*.html', $.htmlmin({
       collapseWhitespace: true,
       removeComments: true
     })))
